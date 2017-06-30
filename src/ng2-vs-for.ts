@@ -18,17 +18,17 @@ const dde:any = document.documentElement,
             dde.mozMatches ? 'mozMatches' :
             dde.mozMatchesSelector ? 'mozMatchesSelector' : '';
 
-function closestElement(el: any, selector: string): any {
-  while (el && el !== document.documentElement && !el[matchingFunction](selector)) {
-    el = el.parentNode as Node;
-  }
+function closestElement(el: Node, selector: string): any {
+    while (el !== document.documentElement && el != null && !el[matchingFunction](selector)) {
+        el = el.parentNode as Node;
+    }
 
-  if (el && el[matchingFunction](selector)) {
-    return el;
-  }
-  else {
-    return null;
-  }
+    if (el && el[matchingFunction](selector)) {
+        return <HTMLElement>el;
+    }
+    else {
+        return null;
+    }
 };
 
 function getWindowScroll() {
@@ -100,7 +100,7 @@ function nextElementSibling(el) {
 
 export class VsFor {
     _originalCollection   = [] as Array<any>;
-	_slicedCollection     = [] as Array<any>;
+    _slicedCollection     = [] as Array<any>;
 	originalLength        : number;
 	before                : HTMLElement;
 	after                 : HTMLElement;
