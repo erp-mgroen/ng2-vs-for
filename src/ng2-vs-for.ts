@@ -6,7 +6,6 @@ import {
   Renderer,
   EmbeddedViewRef,
   NgZone,
-  ChangeDetectorRef,
 } from '@angular/core';
 
 const dde:any = document.documentElement,
@@ -17,15 +16,15 @@ const dde:any = document.documentElement,
             dde.msMatches ? 'msMatches' :
             dde.msMatchesSelector ? 'msMatchesSelector' :
             dde.mozMatches ? 'mozMatches' :
-            dde.mozMatchesSelector ? 'mozMatchesSelector' : null;
+            dde.mozMatchesSelector ? 'mozMatchesSelector' : '';
 
-function closestElement(el: Node, selector: string): HTMLElement {
-  while (el !== document.documentElement && el != null && !el[matchingFunction](selector)) {
-    el = el.parentNode;
+function closestElement(el: any, selector: string): any {
+  while (el && el !== document.documentElement && !el[matchingFunction](selector)) {
+    el = el.parentNode as Node;
   }
 
   if (el && el[matchingFunction](selector)) {
-    return <HTMLElement>el;
+    return el;
   }
   else {
     return null;
@@ -100,8 +99,8 @@ function nextElementSibling(el) {
 })
 
 export class VsFor {
-  _originalCollection   = [];
-	_slicedCollection     = [];
+    _originalCollection   = [] as Array<any>;
+	_slicedCollection     = [] as Array<any>;
 	originalLength        : number;
 	before                : HTMLElement;
 	after                 : HTMLElement;
@@ -134,8 +133,9 @@ export class VsFor {
 	vsExcess              : number = 2;
   vsScrollParent        : string;
   vsAutoresize          : boolean;
-  set originalCollection(value: any[]) {
-    this._originalCollection = value || [];
+  set originalCollection(value: Array<any>) {
+    let emptyArray = [] as Array<any>;
+    this._originalCollection = value || emptyArray;
     if (this.scrollParent) {
       this.refresh();
     }
@@ -161,8 +161,7 @@ export class VsFor {
     private _viewContainer : ViewContainerRef,
     private _templateRef   : TemplateRef<any>,
     private _renderer      : Renderer,
-    private _ngZone        : NgZone,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _ngZone        : NgZone
   ) {
     let _prevClientSize;
     const reinitOnClientHeightChange = () => {
@@ -345,8 +344,8 @@ export class VsFor {
     this.totalSize = this.vsOffsetBefore + size + this.vsOffsetAfter;
   }
   reinitialize() {
-    this._prevStartIndex = void 0;
-    this._prevEndIndex = void 0;
+    this._prevStartIndex = 0;
+    this._prevEndIndex = 0;
     this._minStartIndex = this.originalLength;
     this._maxEndIndex = 0;
 
@@ -485,7 +484,6 @@ export class VsFor {
 
       this.before.style[layoutProp] = o1 + 'px';
       this.after.style[layoutProp] = (total - o2) + 'px';
-      this._changeDetectorRef.markForCheck();
     }
 
     return digestRequired;
